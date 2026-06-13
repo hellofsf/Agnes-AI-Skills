@@ -15,7 +15,7 @@
 
 ### 第一步：准备好你的 API Key 文件
 
-在一个安全的位置创建一个 `apikey.env` 文件（例如 `D:\skill_share\apikey.env`），内容为：
+在一个安全的位置创建一个 `apikey.env` 文件（例如 `C:\user\<user-name>\apikey.env`），内容为：
 
 ```
 AGNES_API_KEY=sk-你的真实密钥
@@ -25,29 +25,10 @@ AGNES_API_KEY=sk-你的真实密钥
 
 ### 第二步：AI 必须修改脚本中的默认路径 🔴
 
-**这是关键步骤，每次使用前 AI 都要检查。**
+**这是关键步骤，首次使用前 AI 要修改apikey路径。**
 
-两个脚本查找 `apikey.env` 的默认路径是硬编码的，且两个脚本的路径**不一致**：
-
-| 脚本 | 当前默认路径 |
-|------|-------------|
-| `agnes-image/agnes-image/scripts/generate.py` | `~/.agnes/agnes.env` |
-| `agnes-video-gen/agnes-video-gen/scripts/agnes_video.py` | `~/agnes.env` |
-
-**AI 在使用前必须执行以下操作之一：**
-
-- **方案 A（推荐）**：调用脚本时显式传入 `--env-file` 参数，指向你的 `apikey.env` 真实路径。
-  ```bash
-  # Image
-  python generate.py --prompt "..." --env-file "D:\skill_share\apikey.env" --output out.png
-
-  # Video
-  python agnes_video.py text2video --prompt "..." --env-file "D:\skill_share\apikey.env" --out out.mp4
-  ```
-
-- **方案 B**：修改脚本源码中的 `DEFAULT_ENV_FILE` 变量，将其改为你的真实 `apikey.env` 路径。**注意**：修改后不要提交到公共仓库，避免泄露本地路径信息。
-
-- **方案 C**：设置系统环境变量 `AGNES_API_KEY`，这样脚本会优先读取环境变量，无需修改文件。
+- **方案 A**：设置系统环境变量 `AGNES_API_KEY`，这样脚本会优先读取环境变量，无需修改文件。
+- **方案 B**：告知ai你的apikey.env的绝对路径, 让ai帮你修改所有相关配置 (推荐5~10min)。
 
 > **AI 注意**：永远不要在聊天中回显、记录或输出 API Key 的内容。如果发现 Key 缺失，引导用户去 `apikey.env` 中填写，而不是让用户在聊天中粘贴 Key。
 
@@ -175,7 +156,6 @@ python agnes_video.py image2video \
 ## 文件结构
 
 ```
-D:\skill_share\
 ├── README.md                  ← 本文件
 ├── apikey.env                 ← 你的 API Key（不提交到 Git）
 │
@@ -202,9 +182,6 @@ D:\skill_share\
 ---
 
 ## 常见问题
-
-### Q: 为什么每次都要传 `--env-file`？
-两个脚本的默认路径不一致（一个在 `~/.agnes/`，一个在 `~`），且不同机器的用户目录不同。显式传入 `--env-file` 是最可靠的做法。
 
 ### Q: 我不想每次都传 `--env-file`，怎么办？
 可以设置环境变量：
